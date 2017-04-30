@@ -1,0 +1,151 @@
+<html>
+<head>
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
+   <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+   <script src='leaflet-omnivore.min.js'></script>
+   <script src="leaflet.rotatedMarker.js"></script>
+   <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
+   <script src="leaflet-bing-layer.js"></script>
+  <style>
+    #map{ height: 100%;width: 100% }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+ <script>
+
+
+  // load a tile layer
+var OSM = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors', minZoom: 0, maxZoom: 19}),
+COCT13 = L.tileLayer('http://{s}.coct.aerial.openstreetmap.org.za/layer/za_coct_aerial_2013/{z}/{x}/{y}.jpg', {minZoom: 0,maxZoom: 21}),
+COCT15 = L.tileLayer('http://{s}.coct.aerial.openstreetmap.org.za/layer/za_coct_aerial_2015/{z}/{x}/{y}.jpg', {minZoom: 1,maxZoom: 21}),
+CDNGI = L.tileLayer('http://{s}.aerial.openstreetmap.org.za/ngi-aerial/{z}/{x}/{y}.jpg', {minZoom: 1,maxZoom: 22});
+
+//Adding gpx files / omnivore layers	
+//omnivore.kml('2.kml').addTo(map);
+//var SENTKLF = omnivore.gpx('Sentraalkloof.gpx');
+var customLayer = L.geoJson(null, {
+    // http://leafletjs.com/reference.html#geojson-style
+    style: function(feature) {
+        return { color: 'magenta' };
+    }
+});	
+
+var Completed = omnivore.gpx('Completed.gpx', null, customLayer);
+var EasternButt = omnivore.gpx('Eastern.gpx');
+var Newlands = omnivore.gpx('Newlands.gpx');
+
+ // initialize the map
+var map = L.map('map', {layers: [COCT15]}).setView([-33.88, 18.6], 10);
+
+//Add tilelayers to basemap layer
+var baseMaps = {
+    "2013 City of Cape Town Aerial": COCT13,
+	"Open Street Map": OSM,	
+    "2015 City of Cape Town Aerial": COCT15,
+	"CD:NGI Aerial": CDNGI
+	};
+
+
+	
+
+
+
+//Add omnivore layers to overlay layer
+var overlay = {
+	/*"Sentraalkloof": SENTKLF,*/
+	"Nardus Hikes": Completed,
+	"Eastern Buttress": EasternButt,
+	"Newlands Forrest Area": Newlands
+	};
+	
+L.control.layers(baseMaps, overlay).addTo(map);
+
+
+
+Completed.on('ready', function() {
+        map.fitBounds(runLayer.getBounds());
+
+        // After the 'ready' event fires, the GeoJSON contents are accessible
+        // and you can iterate through layers to bind custom popups.
+        runLayer.eachLayer(function(layer) {
+            // See the `.bindPopup` documentation for full details. This
+            // dataset has a property called `name`: your dataset might not,
+            // so inspect it and customize to taste.
+            layer.bindPopup(layer.feature.properties.name);
+        });}).addTo(map);
+
+// create popup contents
+    var customPopup = "Spring Buttress Chimney<br/><img src='1.jpg' alt='Spring Buttress Chimney' width='350px'/>";
+    
+    // specify popup options 
+    var customOptions =
+        {
+        'maxWidth': '600',
+        'className' : 'custom'
+        }
+		
+var arrowIcon = L.icon({
+    iconUrl: 'arrow_up.png',
+    iconSize:     [26, 26], // size of the icon
+    iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+	popupAnchor:   [14, 10]
+
+});
+
+//Marker Test
+//var marker = L.marker([-33.9764, 18.38649]).bindPopup(customPopup, customOptions).addTo(map);
+
+
+//Scale control	
+L.control.scale({imperial: false, maxWidth: 200}).addTo(map);
+ 
+
+//L.tileLayer.bing(MyBingMapsKey).addTo(map)
+  
+//map.locate({setView: true, maxZoom: 16});
+
+//Get location
+  /*function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+
+    L.marker(e.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    L.circle(e.latlng, radius).addTo(map);
+}
+*/
+
+var popup = L.popup();
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent(e.latlng.toString().substring(7, e.latlng.toString().indexOf(")")))
+        .openOn(map);
+}
+
+//map.on('locationfound', onLocationFound);
+map.on('click', onMapClick);
+
+ /*leafletImage(map, function(err, canvas) {
+    // now you have canvas
+    // example thing to do with that canvas:
+    var img = document.createElement('img');
+    var dimensions = map.getSize();
+    img.width = dimensions.x;
+    img.height = dimensions.y;
+    img.src = canvas.toDataURL();
+    document.getElementById('images').innerHTML = '';
+    document.getElementById('images').appendChild(img);
+});
+ */
+
+
+map.addLayer(layer);
+
+
+  </script>
+</body>
+</html>
