@@ -34,12 +34,13 @@ var customLayer = L.geoJson(null, {
     }
 });	
 
-var Completed = omnivore.gpx('Completed.gpx', null, customLayer);
+//var Completed = omnivore.gpx('Completed.gpx', null, customLayer);
 var EasternButt = omnivore.gpx('Eastern.gpx');
 var Newlands = omnivore.gpx('Newlands.gpx');
+var Erica = omnivore.gpx('Erica.gpx');	 
 
  // initialize the map
-var map = L.map('map', {layers: [COCT15]}).setView([-33.88, 18.6], 10);
+var map = L.map('map', {layers: [COCT15, Erica]}).setView([-33.88, 18.6], 10);
 
 //Add tilelayers to basemap layer
 var baseMaps = {
@@ -58,7 +59,8 @@ var baseMaps = {
 //Add omnivore layers to overlay layer
 var overlay = {
 	/*"Sentraalkloof": SENTKLF,*/
-	"Nardus Hikes": Completed,
+	/*"Nardus Hikes": Completed,*/
+	"Erica Buttress Explore": Erica,
 	"Eastern Buttress": EasternButt,
 	"Newlands Forrest Area": Newlands
 	};
