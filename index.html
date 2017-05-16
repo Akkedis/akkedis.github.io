@@ -39,9 +39,10 @@ var EasternButt = omnivore.gpx('Eastern.gpx');
 var Newlands = omnivore.gpx('Newlands.gpx');
 var Erica = omnivore.gpx('erica.gpx');
 var EricaTony = omnivore.gpx('EricaButtress.gpx', null, customLayer);
-
+var DevilDirect = omnivore.gpx('DevilDirect.gpx', null, customLayer);
+	 
  // initialize the map
-var map = L.map('map', {layers: [COCT15, Erica]}).setView([-33.88, 18.6], 10);
+var map = L.map('map', {layers: [COCT15, DevilDirect]}).setView([-33.88, 18.6], 10);
 
 //Add tilelayers to basemap layer
 var baseMaps = {
@@ -64,7 +65,8 @@ var overlay = {
 	"Erica Buttress Explore": Erica,
 	"Tony Erica Buttress": EricaTony,
 	"Eastern Buttress": EasternButt,
-	"Newlands Forrest Area": Newlands
+	"Newlands Forrest Area": Newlands,
+	"Devil's Peak from Minor Peak": DevilDirect
 	};
 	
 L.control.layers(baseMaps, overlay).addTo(map);
