@@ -22,7 +22,9 @@ var OSM = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribut
 COCT13 = L.tileLayer('http://{s}.coct.aerial.openstreetmap.org.za/layer/za_coct_aerial_2013/{z}/{x}/{y}.jpg', {minZoom: 0,maxZoom: 21}),
 COCT15 = L.tileLayer('http://{s}.coct.aerial.openstreetmap.org.za/layer/za_coct_aerial_2015/{z}/{x}/{y}.jpg', {minZoom: 1,maxZoom: 21}),
 CDNGI = L.tileLayer('http://{s}.aerial.openstreetmap.org.za/ngi-aerial/{z}/{x}/{y}.jpg', {minZoom: 1,maxZoom: 22}),
-LANDSCP = L.tileLayer('https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=1a9e32339fd64207a92f54488df3067d', {minZoom: 0,maxZoom: 19});
+LANDSCP = L.tileLayer('https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=1a9e32339fd64207a92f54488df3067d', {minZoom: 0,maxZoom: 19}),
+MAPY = L.tileLayer('https://m3.mapserver.mapy.cz/wturist-m/{z}-{x}-{y}', {minZoom: 2,maxZoom: 18});
+    
 
 //Adding gpx files / omnivore layers	
 //omnivore.kml('2.kml').addTo(map);
@@ -42,7 +44,7 @@ var EricaTony = omnivore.gpx('EricaButtress.gpx', null, customLayer);
 var DevilDirect = omnivore.gpx('DevilDirect.gpx');
 	 
  // initialize the map
-var map = L.map('map', {layers: [COCT15, DevilDirect]}).setView([-33.88, 18.6], 10);
+var map = L.map('map', {layers: [COCT15]}).setView([-33.88, 18.6], 10);
 
 //Add tilelayers to basemap layer
 var baseMaps = {
@@ -50,7 +52,8 @@ var baseMaps = {
 	"Open Street Map": OSM,	
     	"2015 City of Cape Town Aerial": COCT15,
 	"CD:NGI Aerial": CDNGI,
-	"Landscape Map": LANDSCP
+	"Landscape Map": LANDSCP,
+	"Mapy": MAPY
 	};
 
 
