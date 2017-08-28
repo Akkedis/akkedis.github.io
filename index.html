@@ -27,12 +27,10 @@ var OSM = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 COCT13 = L.tileLayer('http://{s}.coct.aerial.openstreetmap.org.za/layer/za_coct_aerial_2013/{z}/{x}/{y}.jpg', {
 	attribution: 'Copyright &copy; 2013 <a href=\"https://www.capetown.gov.za/\">City of Cape Town</a>',
 	minZoom: 0,
-	maxNativeZoom: 21
 }),
 COCT15 = L.tileLayer('http://{s}.coct.aerial.openstreetmap.org.za/layer/za_coct_aerial_2015/{z}/{x}/{y}.jpg', {
 	attribution: 'Copyright &copy; 2015 <a href=\"https://www.capetown.gov.za/\">City of Cape Town</a>',
 	minZoom: 1,
-	maxNativeZoom: 21	
 }),
     
 COCT17 = L.tileLayer('https://citymaps.capetown.gov.za/agsext1/rest/services/Aerial_Photography_Cached/AP_2017_Jan_TM/MapServer/tile/{z}/{x}/{y}', {
@@ -93,12 +91,11 @@ var EricaTony = omnivore.gpx('EricaButtress.gpx', null, customLayer);
 var DevilDirect = omnivore.gpx('DevilDirect.gpx');
 	 
  // initialize the map
-var map = L.map('map', {layers: [COCT17]}).setView([-33.88, 18.6], 10);
+var map = L.map('map', {layers: [COCT15]}).setView([-33.88, 18.6], 10);
 
 //Add tilelayers to basemap layer
 var baseMaps = {
     	"Open Street Map": OSM,	
-	"2017 City of Cape Town Aerial": COCT17,
 	"2015 City of Cape Town Aerial": COCT15,
 	"2013 City of Cape Town Aerial": COCT13,	
 	"CD:NGI Aerial": CDNGI,
