@@ -179,16 +179,20 @@ var baseMaps = {
 	"Landscape Map": LANDSCP,
 	"Mapy": MAPY,
 	"Strava Map": STRAVA,
-	"CD:NGI 50k Topo": NGITOPO50k,
-	"CD:NGI 250k Topo": NGITOPO250k	
+	"CD:NGI 50k 2010": NGITOPO50k,
+	"CD:NGI 50k CT 1940":CT50k1940,
+	"CD:NGI 50k CT 1960":CT50k1960,
+	"CD:NGI 50k CT 1980":CT50k1980,
+	"CD:NGI 50k CT 1990":CT50k1990,
+	"CD:NGI 50k CT 2000":CT50k2000,
+	"CD:NGI 250k": NGITOPO250k	
 	};
 	
 //Add omnivore layers to overlay layer
 var overlay = {
 	/*"Sentraalkloof": SENTKLF,*/
 	/*"Nardus Hikes": Completed,*/
-	"OSM Overlay": OSMOver,
-	"Landdroskloof to Somerset-Sneeukop(planning)": LandrosKlf
+	"OSM Overlay": OSMOver
 	};
 	
 L.control.layers(baseMaps, overlay).addTo(map);
