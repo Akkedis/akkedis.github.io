@@ -152,6 +152,10 @@ var overlay = {
 	
 L.control.layers(baseMaps, overlay).addTo(map);
 
+//Scale control	
+L.control.scale({imperial: false, maxWidth: 200}).addTo(map);	 
+
+
 L.Control.FileLayerLoad({
             fitBounds: true,
             layerOptions: {
@@ -205,10 +209,6 @@ var arrowIcon = L.icon({
 //Marker Test
 //var marker = L.marker([-33.9764, 18.38649]).bindPopup(customPopup, customOptions).addTo(map);
 
-
-//Scale control	
-L.control.scale({imperial: false, maxWidth: 200}).addTo(map);
- 
 
 //L.tileLayer.bing(MyBingMapsKey).addTo(map)
   
