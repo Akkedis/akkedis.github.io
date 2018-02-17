@@ -104,8 +104,15 @@ ESRISat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Worl
 	attribution: 'State Copyright &copy; 1996&ndash;2010 <a href="http://www.ngi.gov.za/">Chief Directorate: National Geo-spatial Information</a>', 
 	minZoom: 2, 
 	maxNativeZoom: 17
+}),
+	 
+StravaHeatmap = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/run/hot/{zoom}/{x}/{y}.png', {
+	attribution: '<a href="https://www.strava.com/">© Strava 2017</a>', 
+	minZoom: 3, 
+	maxZoom: 22,
+	maxNativeZoom: 15
 });
-
+	 
     
 //Adding gpx files / omnivore layers	
 //omnivore.kml('2.kml').addTo(map);
@@ -147,6 +154,7 @@ var baseMaps = {
 var overlay = {
 	/*"Sentraalkloof": SENTKLF,*/
 	/*"Nardus Hikes": Completed,*/
+	"Strava Heatmap": StravaHeatmap,
 	"OSM Overlay": OSMOver,
 	"Landdroskloof to Somerset-Sneeukop(planning)": LandrosKlf
 	};
