@@ -135,19 +135,19 @@ var LandrosKlf = omnivore.gpx('LandrosKlf.gpx');
 var map = L.map('map', {layers: [COCT15, OSMOver]}).setView([-33.88, 18.6], 10);
 //Add tilelayers to basemap layer
 var baseMaps = {
-    "Open Street Map": OSM,	
+    	"Open Street Map": OSM,	
+	"CD:NGI 50k Topo": NGITOPO50k,
+	"CD:NGI 250k Topo": NGITOPO250k,	
+	"CD:NGI Aerial": CDNGI,
 	"2015 City of Cape Town Aerial": COCT15,
 	"2013 City of Cape Town Aerial": COCT13,	
-	"CD:NGI Aerial": CDNGI,
 	"Mapbox Satellite (OSM Data)": MAPBOXSAT,
 	"Esri Satellite": ESRISat,
 	"Google Satellite":googleSat,
 	"HereWeGo Satellite":HereSat,
 	"Landscape Map": LANDSCP,
 	"Mapy": MAPY,
-	"Strava Map": STRAVA,
-	"CD:NGI 50k Topo": NGITOPO50k,
-	"CD:NGI 250k Topo": NGITOPO250k	
+	"Strava Map": STRAVA
 	};
 	
 //Add omnivore layers to overlay layer
