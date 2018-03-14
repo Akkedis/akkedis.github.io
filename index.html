@@ -106,13 +106,21 @@ ESRISat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Worl
 	maxNativeZoom: 17
 }),
 	 
-StravaHeatmap = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/run/hot/{z}/{x}/{y}.png', {
+StravaHeatmapOld = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/run/hot/{z}/{x}/{y}.png', {
 	attribution: '<a href="https://www.strava.com/">© Strava 2017</a>', 
 	minZoom: 3, 
 	maxZoom: 22,
-	maxNativeZoom: 15
-});
+	maxNativeZoom: 11
+	
+}),
 	 
+StravaHeatmapNew = L.tileLayer('http://{s}-globalheat.strava.com/tiles/run/hot/{z}/{x}/{y}.png?v=6{header(Referer,strava.com)}', {
+	attribution: '<a href="https://www.strava.com/">© Strava 2017</a>', 
+	minZoom: 3, 
+	maxZoom: 22,
+	maxNativeZoom: 17
+	
+});
     
 //Adding gpx files / omnivore layers	
 //omnivore.kml('2.kml').addTo(map);
@@ -155,7 +163,8 @@ var overlay = {
 	/*"Sentraalkloof": SENTKLF,*/
 	/*"Nardus Hikes": Completed,*/
 	/*""Landdroskloof to Somerset-Sneeukop(planning)": LandrosKlf*/
-	"Strava Heatmap": StravaHeatmap,
+	"Strava Heatmap (New)": StravaHeatmapNew,
+	"Strava Heatmap (Old)": StravaHeatmapOld,
 	"OSM Overlay": OSMOver
 	};
 	
