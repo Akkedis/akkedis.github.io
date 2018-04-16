@@ -114,7 +114,7 @@ StravaHeatmapOld = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/ru
 	
 }),
 	 
-StravaHeatmapNew = L.tileLayer('http://{s}-globalheat.strava.com/tiles-auth/run/hot/{z}/{x}/{y}.png?v=19{header(Referer,strava.com)}', {
+StravaHeatmapNew = L.tileLayer('http://heatmap-external-{s}.strava.com/tiles-auth/run/hot/{z}/{x}/{y}.png?v=19{header(Referer,strava.com)}', {
 	attribution: '<a href="https://www.strava.com/">© Strava 2017</a>', 
 	minZoom: 3, 
 	maxZoom: 22,
