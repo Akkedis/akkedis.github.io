@@ -120,7 +120,16 @@ StravaHeatmapNew = L.tileLayer('http://{s}-globalheat.strava.com/tiles/run/hot/{
 	maxZoom: 22,
 	maxNativeZoom: 17
 	
-});
+}),
+	 
+	 
+Tilehosting = L.tileLayer('https://maps.tilehosting.com/styles/topo/{z}/{x}/{y}.png?key=hWWfWrAiWGtv68r8wA6D', {
+	attribution: ' | <a href="https://www.maptiler.com/license/maps/">© MapTiler</a><a href="https://openmaptiles.com/contours" target="_blank">Contours</a> | <a href="https://openmaptiles.com/hillshades" target="_blank">Hillshades</a> | <a href="http://www.openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap contributors</a>', 
+	minZoom: 2, 
+	maxZoom: 22,
+	maxNativeZoom: 18
+	
+});	 
     
 //Adding gpx files / omnivore layers	
 //omnivore.kml('2.kml').addTo(map);
@@ -155,7 +164,8 @@ var baseMaps = {
 	"HereWeGo Satellite":HereSat,
 	"Landscape Map": LANDSCP,
 	"Mapy": MAPY,
-	"Strava Map": STRAVA
+	"Strava Map": STRAVA,
+	"Tile Hosting":Tilehosting
 	};
 	
 //Add omnivore layers to overlay layer
