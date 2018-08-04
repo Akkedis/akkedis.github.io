@@ -100,7 +100,7 @@ HereSat = L.tileLayer('https://{s}.aerial.maps.api.here.com/maptile/2.1/maptile/
 	subdomains:['1','2','3','4']
 }),
 
-ESRISat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg', {
+ESRISat = L.tileLayer('tms[22]:https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 	attribution: 'State Copyright &copy; 1996&ndash;2010 <a href="http://www.ngi.gov.za/">Chief Directorate: National Geo-spatial Information</a>', 
 	minZoom: 2, 
 	maxNativeZoom: 17
