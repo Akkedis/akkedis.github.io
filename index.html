@@ -191,6 +191,13 @@ L.control.layers(baseMaps, overlay).addTo(map);
 L.control.scale({imperial: false, maxWidth: 200}).addTo(map);	 
 
 
+Hex1.on('ready', function() {
+        runLayer.eachLayer(function(layer) {
+            layer.bindPopup(layer.feature.properties.name);
+        });
+    })	 
+	 
+
 L.Control.FileLayerLoad({
             fitBounds: true,
             layerOptions: {
@@ -201,19 +208,17 @@ L.Control.FileLayerLoad({
                 }
             }
         }).addTo(map);
-
-var control = L.Control.fileLayerLoad();
+	 
+	
+	
+	 
+	 var control = L.Control.fileLayerLoad();
     control.loader.on('data:loaded', function (e) {
         // Add to map layer switcher
         layerswitcher.addOverlay(e.layer, e.filename);
     });
 	 
-Hex1.on('ready', function() {
-        runLayer.eachLayer(function(layer) {
-            layer.bindPopup(layer.feature.properties.name);
-        });
-    })	
-	
+
 /*
 Completed.on('ready', function() {
         map.fitBounds(runLayer.getBounds());
