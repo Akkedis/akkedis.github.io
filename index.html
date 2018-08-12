@@ -207,7 +207,12 @@ var control = L.Control.fileLayerLoad();
         // Add to map layer switcher
         layerswitcher.addOverlay(e.layer, e.filename);
     });
-	
+	 
+Hex1.on('ready', function() {
+        runLayer.eachLayer(function(layer) {
+            layer.bindPopup(layer.feature.properties.name);
+        });
+    })	
 	
 /*
 Completed.on('ready', function() {
