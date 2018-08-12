@@ -146,10 +146,15 @@ var customLayer = L.geoJson(null, {
 //var Erica = omnivore.gpx('erica.gpx');
 //var EricaTony = omnivore.gpx('EricaButtress.gpx', null, customLayer);
 //var DevilDirect = omnivore.gpx('DevilDirect.gpx');
-var LandrosKlf = omnivore.gpx('LandrosKlf.gpx');
+var Hex1 = omnivore.gpx('Dag1.gpx');
+var Hex2 = omnivore.gpx('Dag2.gpx');
+var Hex3 = omnivore.gpx('Dag3.gpx');
+var Hex4_1 = omnivore.gpx('Dag4-1.gpx');
+var Hex4_1 = omnivore.gpx('Dag4-1.gpx');
+var Hex5 = omnivore.gpx('Dag5.gpx');
 	 
  // initialize the map
-var map = L.map('map', {layers: [COCT15, OSMOver]}).setView([-33.88, 18.6], 10);
+var map = L.map('map', {layers: [NGITOPO50k, Hex1, Hex2, Hex3, Hex4_1, Hex4_2, Hex5]}).setView([-33.508, 19.385], 13);
 //Add tilelayers to basemap layer
 var baseMaps = {
     	"Open Street Map": OSM,	
@@ -170,10 +175,12 @@ var baseMaps = {
 	
 //Add omnivore layers to overlay layer
 var overlay = {
-	/*"Sentraalkloof": SENTKLF,*/
-	/*"Nardus Hikes": Completed,*/
-	/*""Landdroskloof to Somerset-Sneeukop(planning)": LandrosKlf*/
-	"Strava Heatmap (Version 19)": StravaHeatmapNew,
+	"Sentraalkloof": Hex1,
+	"Nardus Hikes": Hex2,
+	"Landdroskloof to Somerset-Sneeukop(planning)": Hex3,
+	"Strava Heatmap (Version 19)": Hex4_1,
+	"Strava Heatmap (Version 19)": Hex4_2,
+	"Strava Heatmap (Version 19)": Hex5,
 	"Strava Heatmap (Old)": StravaHeatmapOld,
 	"OSM Overlay": OSMOver
 	};
