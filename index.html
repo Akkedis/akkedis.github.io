@@ -146,15 +146,16 @@ var customLayer = L.geoJson(null, {
 //var Erica = omnivore.gpx('erica.gpx');
 //var EricaTony = omnivore.gpx('EricaButtress.gpx', null, customLayer);
 //var DevilDirect = omnivore.gpx('DevilDirect.gpx');
-var Hex1 = omnivore.gpx('Dag1.gpx', null, customLayer);
-var Hex2 = omnivore.gpx('Dag2.gpx', null, customLayer);
-var Hex3 = omnivore.gpx('Dag3.gpx', null, customLayer);
-var Hex4_1 = omnivore.gpx('Dag4-1.gpx', null, customLayer);
-var Hex4_2 = omnivore.gpx('Dag4-2.gpx', null, customLayer);
-var Hex5 = omnivore.gpx('Dag5.gpx', null, customLayer);
+//var Hex1 = omnivore.gpx('Dag1.gpx', null, customLayer);
+//var Hex2 = omnivore.gpx('Dag2.gpx', null, customLayer);
+//var Hex3 = omnivore.gpx('Dag3.gpx', null, customLayer);
+//var Hex4_1 = omnivore.gpx('Dag4-1.gpx', null, customLayer);
+//var Hex4_2 = omnivore.gpx('Dag4-2.gpx', null, customLayer);
+//var Hex5 = omnivore.gpx('Dag5.gpx', null, customLayer);
+var Drakenstein = omnivore.gpx('drakenstein.gpx', null, customLayer);
 	 
  // initialize the map
-var map = L.map('map', {layers: [NGITOPO50k, Hex1]}).setView([-33.515, 19.400], 13);
+var map = L.map('map', {layers: [NGITOPO50k, Drakenstein]}).setView([-33.515, 19.400], 13);
 //Add tilelayers to basemap layer
 var baseMaps = {
     	"Open Street Map": OSM,	
@@ -175,7 +176,7 @@ var baseMaps = {
 	
 //Add omnivore layers to overlay layer
 var overlay = {
-	"Hex Traverse": Hex1,
+	"Drakenstein": Drakenstein,
 	"Strava Heatmap (Old)": StravaHeatmapOld,
 	"OSM Overlay": OSMOver
 	};
@@ -185,8 +186,7 @@ L.control.layers(baseMaps, overlay).addTo(map);
 //Scale control	
 L.control.scale({imperial: false, maxWidth: 200}).addTo(map);	 
 
-
-Hex1.on('ready', function() {
+Drakenstein.on('ready', function() {
         runLayer.eachLayer(function(layer) {
             layer.bindPopup(layer.feature.properties.name);
         });
