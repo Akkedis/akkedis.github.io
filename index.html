@@ -152,10 +152,10 @@ var customLayer = L.geoJson(null, {
 //var Hex4_1 = omnivore.gpx('Dag4-1.gpx', null, customLayer);
 //var Hex4_2 = omnivore.gpx('Dag4-2.gpx', null, customLayer);
 //var Hex5 = omnivore.gpx('Dag5.gpx', null, customLayer);
-var Arangies= omnivore.gpx('Option1.gpx', null, customLayer);
+var Opsie1= omnivore.gpx('Option1.gpx', null, customLayer);
 	 
  // initialize the map
-var map = L.map('map', {layers: [NGITOPO50k, Arangies]}).setView([-33.73963965, 19.88692425], 14);
+var map = L.map('map', {layers: [NGITOPO50k, Arangies]}).setView([-29.0909767, 29.305], 12);
 //Add tilelayers to basemap layer
 var baseMaps = {
     	"Open Street Map": OSM,	
@@ -176,7 +176,7 @@ var baseMaps = {
 	
 //Add omnivore layers to overlay layer
 var overlay = {
-	"Arangieskop": Arangies,
+	"Drakensberg 2020 Opsie 1": Opsie1,
 	"Strava Heatmap (Old)": StravaHeatmapOld,
 	"OSM Overlay": OSMOver
 	};
