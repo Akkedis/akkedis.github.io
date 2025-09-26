@@ -144,12 +144,16 @@ OSMOver = L.tileLayer('https://api.mapbox.com/styles/v1/akkedisi/cj6wf07ok92fv2r
 //Adding gpx files / omnivore layers	
 //omnivore.kml('2.kml').addTo(map);
 //var SENTKLF = omnivore.gpx('Sentraalkloof.gpx');
+
+/*
 var customLayer = L.geoJson(null, {
     // http://leafletjs.com/reference.html#geojson-style
     style: function(feature) {
         return { color: 'magenta' };
     }
 });	
+*/
+	 
 //var Completed = omnivore.gpx('Completed.gpx', null, customLayer);
 //var EasternButt = omnivore.gpx('Eastern.gpx');
 //var Newlands = omnivore.gpx('Newlands.gpx');
@@ -343,6 +347,7 @@ $.getJSON('https://akkedis.github.io/sheet250k.json', function (data) {
   </script>
 </body>
 </html>
+
 
 
 
