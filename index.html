@@ -1,6 +1,7 @@
 <html>
 <head>
    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
    <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
    <script src='leaflet-omnivore.min.js'></script>
    <script src="leaflet.rotatedMarker.js"></script>
@@ -181,17 +182,18 @@ var overlay = {
 	"OSM Overlay": OSMOver
 	};
 	
-L.control.layers(baseMaps, overlay).addTo(map);
+var layerControl = L.control.layers(baseMaps, overlay).addTo(map);
 
 //Scale control	
 L.control.scale({imperial: false, maxWidth: 200}).addTo(map);	 
 
+/*
 Drakenstein.on('ready', function() {
         runLayer.eachLayer(function(layer) {
             layer.bindPopup(layer.feature.properties.name);
         });
     })	 
-	 
+ 
 
 L.Control.FileLayerLoad({
             fitBounds: true,
@@ -204,7 +206,7 @@ L.Control.FileLayerLoad({
             }
         }).addTo(map);
 	 
-	
+
 	
 	 
 	 var control = L.Control.fileLayerLoad();
@@ -213,7 +215,8 @@ L.Control.FileLayerLoad({
         layerswitcher.addOverlay(e.layer, e.filename);
     });
 	 
-
+	 
+	*/
 /*
 Completed.on('ready', function() {
         map.fitBounds(runLayer.getBounds());
@@ -277,7 +280,7 @@ function onMapClick(e) {
 map.on('click', onMapClick);
 */
 	 
-$.getJSON('sheet50k.json', function (data) {
+$.getJSON('https://akkedis.github.io/sheet50k.json', function (data) {
   var sheets = L.geoJson(data, {
     style: {
       stroke: true, color: 'black', weight: 2, opacity: 1,
@@ -288,8 +291,9 @@ $.getJSON('sheet50k.json', function (data) {
       layer.bindPopup('Sheet ' + props.s + '<br/>Ed. ' + props.e + ' (' + props.y + ')');
     }
   });
-
   layerControl.addOverlay(sheets, "1:50k sheet info");
+}).fail(function (jqXHR, textStatus, errorThrown) {
+  console.error('Error loading sheet50k.json:', textStatus, errorThrown);
 });
 	 
  /*leafletImage(map, function(err, canvas) {
@@ -312,4 +316,5 @@ $.getJSON('sheet50k.json', function (data) {
   </script>
 </body>
 </html>
+
 
