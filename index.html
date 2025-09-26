@@ -295,6 +295,24 @@ $.getJSON('https://akkedis.github.io/sheet50k.json', function (data) {
 }).fail(function (jqXHR, textStatus, errorThrown) {
   console.error('Error loading sheet50k.json:', textStatus, errorThrown);
 });
+
+
+$.getJSON('https://akkedis.github.io/sheet250k.json', function (data) {
+  var sheets = L.geoJson(data, {
+    style: {
+      stroke: true, color: 'black', weight: 2, opacity: 1,
+      fill: true, fillColor: 'lightblue', fillOpacity: 0
+    },
+    onEachFeature: function (feature, layer) {
+      var props = feature.properties;
+      layer.bindPopup('Sheet ' + props.s + '<br/>Ed. ' + props.e + '<br/>Yr.' + props.y + '');
+    }
+  });
+  layerControl.addOverlay(sheets, "1:250k sheet info");
+}).fail(function (jqXHR, textStatus, errorThrown) {
+  console.error('Error loading sheet250k.json:', textStatus, errorThrown);
+});
+	
 	 
  /*leafletImage(map, function(err, canvas) {
     // now you have canvas
@@ -316,6 +334,7 @@ $.getJSON('https://akkedis.github.io/sheet50k.json', function (data) {
   </script>
 </body>
 </html>
+
 
 
 
