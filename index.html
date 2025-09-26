@@ -265,7 +265,7 @@ var arrowIcon = L.icon({
 }
 */
 
-var popup = L.popup();
+ /*var popup = L.popup();
 function onMapClick(e) {
     popup
         .setLatLng(e.latlng)
@@ -275,7 +275,23 @@ function onMapClick(e) {
 
 //map.on('locationfound', onLocationFound);
 map.on('click', onMapClick);
+*/
+	 
+$.getJSON('sheet50k.json', function (data) {
+  var sheets = L.geoJson(data, {
+    style: {
+      stroke: true, color: 'black', weight: 2, opacity: 1,
+      fill: true, fillColor: 'lightblue', fillOpacity: 0
+    },
+    onEachFeature: function (feature, layer) {
+      var props = feature.properties;
+      layer.bindPopup('Sheet ' + props.s + '<br/>Ed. ' + props.e + ' (' + props.y + ')');
+    }
+  });
 
+  layerControl.addOverlay(sheets, "1:50k sheet info");
+});
+	 
  /*leafletImage(map, function(err, canvas) {
     // now you have canvas
     // example thing to do with that canvas:
@@ -296,3 +312,4 @@ map.on('click', onMapClick);
   </script>
 </body>
 </html>
+
