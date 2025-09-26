@@ -1,13 +1,14 @@
 <html>
 <head>
-   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-   <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
-   <script src='leaflet-omnivore.min.js'></script>
-   <script src="leaflet.rotatedMarker.js"></script>
-   <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise"></script>
-   <script src="https://unpkg.com/leaflet-filelayer"></script>
-   <script src="https://unpkg.com/togeojson"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+   	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   	<script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+   	<script src='leaflet-omnivore.min.js'></script>
+   	<script src="https://unpkg.com/leaflet.marker.rotate@0.2.2/dist/leaflet.rotatedMarker.js"></script>
+
+   	<script src="https://unpkg.com/leaflet-filelayer"></script>
+   	<script src="https://unpkg.com/togeojson"></script>
   <style>
     #map{ height: 100%;width: 100% }
   </style>
@@ -17,15 +18,17 @@
   <div id="map"></div>
 
  <script>
-
-
+	 
+// Removed scripts
+//	<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise">
+	 
   // load a tile layer
 var OSM = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors', 
 	minZoom: 0, 
 	maxNativeZoom: 19
 }),
-    
+  /*  
 COCT13 = L.tileLayer('http://{s}.coct.aerial.openstreetmap.org.za/layer/za_coct_aerial_2013/{z}/{x}/{y}.jpg', {
 	attribution: 'Copyright &copy; 2013 <a href=\"https://www.capetown.gov.za/\">City of Cape Town</a>',
 	minZoom: 0,
@@ -42,11 +45,7 @@ COCT17 = L.tileLayer('https://citymaps.capetown.gov.za/agsext1/rest/services/Aer
 	minZoom: 0,
 	maxNativeZoom: 12	
 }), 
-   
-CDNGI = L.tileLayer('http://{s}.aerial.openstreetmap.org.za/ngi-aerial/{z}/{x}/{y}.jpg', {
-	minZoom: 1,
-	maxZoom: 22
-}),
+
 
 MAPBOXSAT = L.tileLayer('https://a.tiles.mapbox.com/v4/mapbox.streets-satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWxsdHJhaWxzIiwiYSI6ImNqM293emo1YjAwZWQyd3FnaXh0eWsxeHkifQ.LeDD0X-JiWsJmDKeB0AS5w', {
 	minZoom: 1,
@@ -68,6 +67,32 @@ STRAVA = L.tileLayer('https://{s}.tiles.mapbox.com/v4/strava.blprdx6r/{z}/{x}/{y
 	minZoom: 0,
 	maxNativeZoom: 19
 }),
+
+HereSat = L.tileLayer('https://{s}.aerial.maps.api.here.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&token=djPZyynKsbTjIUDOBcHZ2g&lg=ENG', {
+    maxZoom: 20,
+	subdomains:['1','2','3','4']
+}),
+
+ESRISat = L.tileLayer('tms[22]:https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'State Copyright &copy; 1996&ndash;2010 <a href="http://www.ngi.gov.za/">Chief Directorate: National Geo-spatial Information</a>', 
+	minZoom: 2, 
+	maxNativeZoom: 17
+}),
+	 
+Tilehosting = L.tileLayer('https://maps.tilehosting.com/styles/topo/{z}/{x}/{y}.png?key=hWWfWrAiWGtv68r8wA6D', {
+	attribution: ' | <a href="https://www.maptiler.com/license/maps/">© MapTiler</a><a href="https://openmaptiles.com/contours" target="_blank">Contours</a> | <a href="https://openmaptiles.com/hillshades" target="_blank">Hillshades</a> | <a href="http://www.openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap contributors</a>', 
+	minZoom: 2, 
+	maxZoom: 22,
+	maxNativeZoom: 18
+	
+});	 
+
+*/
+CDNGI = L.tileLayer('http://{s}.aerial.openstreetmap.org.za/ngi-aerial/{z}/{x}/{y}.jpg', {
+	minZoom: 1,
+	maxZoom: 22
+}),
+
     
 NGITOPO50k = L.tileLayer('http://htonl.dev.openstreetmap.org/ngi-tiles/tiles/50k/{z}/{x}/{-y}.png', {
 	attribution: 'State Copyright &copy; 1996&ndash;2013 <a href="http://www.ngi.gov.za/">Chief Directorate: National Geo-spatial Information</a>', 
@@ -81,13 +106,6 @@ NGITOPO250k = L.tileLayer('http://htonl.dev.openstreetmap.org/ngi-tiles/tiles/25
 	minZoom: 4, 
 	maxNativeZoom: 12
 }),
-    
-OSMOver = L.tileLayer('https://api.mapbox.com/styles/v1/akkedisi/cj6wf07ok92fv2rqr1zbvjzb4/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWtrZWRpc2kiLCJhIjoiY2o2d2VwdjBlMWpucjJxbDFlbzR1YTg5dSJ9.116Aq7uu6qkEfbnMbQr4xA', {
-	attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/" target="_blank"><strong>Improve this map </strong> </a>', 
-	minZoom: 1,
-	maxZoom: 22,
-	maxNativeZoom: 20
-}),
 
 
 
@@ -96,17 +114,7 @@ googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     subdomains:['mt0','mt1','mt2','mt3']
 }),
 
-HereSat = L.tileLayer('https://{s}.aerial.maps.api.here.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?app_id=xWVIueSv6JL0aJ5xqTxb&token=djPZyynKsbTjIUDOBcHZ2g&lg=ENG', {
-    maxZoom: 20,
-	subdomains:['1','2','3','4']
-}),
 
-ESRISat = L.tileLayer('tms[22]:https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'State Copyright &copy; 1996&ndash;2010 <a href="http://www.ngi.gov.za/">Chief Directorate: National Geo-spatial Information</a>', 
-	minZoom: 2, 
-	maxNativeZoom: 17
-}),
-	 
 StravaHeatmapOld = L.tileLayer('https://heatmap-external-{s}.strava.com/tiles/run/hot/{z}/{x}/{y}.png', {
 	attribution: '<a href="https://www.strava.com/">© Strava 2017</a>', 
 	minZoom: 3, 
@@ -123,14 +131,15 @@ StravaHeatmapNew = L.tileLayer('http://heatmap-external-{s}.strava.com/tiles-aut
 	
 }),
 	 
-	 
-Tilehosting = L.tileLayer('https://maps.tilehosting.com/styles/topo/{z}/{x}/{y}.png?key=hWWfWrAiWGtv68r8wA6D', {
-	attribution: ' | <a href="https://www.maptiler.com/license/maps/">© MapTiler</a><a href="https://openmaptiles.com/contours" target="_blank">Contours</a> | <a href="https://openmaptiles.com/hillshades" target="_blank">Hillshades</a> | <a href="http://www.openmaptiles.org/" target="_blank">© OpenMapTiles</a> <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap contributors</a>', 
-	minZoom: 2, 
+	     
+OSMOver = L.tileLayer('https://api.mapbox.com/styles/v1/akkedisi/cj6wf07ok92fv2rqr1zbvjzb4/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWtrZWRpc2kiLCJhIjoiY2o2d2VwdjBlMWpucjJxbDFlbzR1YTg5dSJ9.116Aq7uu6qkEfbnMbQr4xA', {
+	attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="https://www.mapbox.com/map-feedback/" target="_blank"><strong>Improve this map </strong> </a>', 
+	minZoom: 1,
 	maxZoom: 22,
-	maxNativeZoom: 18
-	
-});	 
+	maxNativeZoom: 20
+}),
+
+
     
 //Adding gpx files / omnivore layers	
 //omnivore.kml('2.kml').addTo(map);
@@ -159,20 +168,20 @@ var Opsie1= omnivore.gpx('Option1.gpx', null, customLayer);
 var map = L.map('map', {layers: [NGITOPO50k]}).setView([-33.8595856,19.1825786], 12);
 //Add tilelayers to basemap layer
 var baseMaps = {
-    	"Open Street Map": OSM,	
+    "Open Street Map": OSM,	
 	"CD:NGI 50k Topo": NGITOPO50k,
 	"CD:NGI 250k Topo": NGITOPO250k,	
 	"CD:NGI Aerial": CDNGI,
-	"2015 City of Cape Town Aerial": COCT15,
-	"2013 City of Cape Town Aerial": COCT13,	
-	"Mapbox Satellite (OSM Data)": MAPBOXSAT,
-	"Esri Satellite": ESRISat,
+	//"2015 City of Cape Town Aerial": COCT15,
+	//"2013 City of Cape Town Aerial": COCT13,	
+	//"Mapbox Satellite (OSM Data)": MAPBOXSAT,
+	//"Esri Satellite": ESRISat,
 	"Google Satellite":googleSat,
-	"HereWeGo Satellite":HereSat,
-	"Landscape Map": LANDSCP,
-	"Mapy": MAPY,
-	"Strava Map": STRAVA,
-	"Tile Hosting":Tilehosting
+	//"HereWeGo Satellite":HereSat,
+	//"Landscape Map": LANDSCP,
+	//"Mapy": MAPY,
+	//"Strava Map": STRAVA,
+	//"Tile Hosting":Tilehosting
 	};
 	
 //Add omnivore layers to overlay layer
@@ -229,7 +238,7 @@ Completed.on('ready', function() {
             // so inspect it and customize to taste.
             layer.bindPopup(layer.feature.properties.name);
         });}).addTo(map);
-*/
+
 	 
 // create popup contents
 var customPopup = "Spring Buttress Chimney<br/><img src='1.jpg' alt='Spring Buttress Chimney' width='350px'/>";
@@ -334,6 +343,7 @@ $.getJSON('https://akkedis.github.io/sheet250k.json', function (data) {
   </script>
 </body>
 </html>
+
 
 
 
