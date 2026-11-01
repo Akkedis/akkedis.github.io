@@ -146,7 +146,7 @@ const META_AF = {
    "Volg die grondpad verby ’n dam, met die teerpad aan jou linkerkant.",
    "Volg die grondpad vir ongeveer <b>3 km</b> tot aan die einde van die <b>Witzenbergpas</b>. Moenie links of regs afdraai op hierdie pad nie.",
    "Stap tot by <b>Slagboom (Sip Café)</b>."],
-  notes:["Plase: Bokveldskloof, Nooitgedacht, Slagboom.","Tussen Bokveldskloof en die Witzenberg-kragstasie volg die lyn die naaste gekarteerde paaie. Die boekie se damwalle, denneplantasie en jeeppad op Nooitgedacht kan nie op die kaarte vasgepen word nie, so volg die roetemerkers daar.","Sip Café is ’n koffiewinkel wat van skeepshouers gebou is. Dit is ’n welverdiende stop aan die einde van die dag."]},
+  notes:["Plase: Bokveldskloof, Nooitgedacht, Slagboom.","Van Bokveldskloof bly die roete wes van die R303: verby die dam, met die spoor met die plantasie aan jou linkerkant, tot by die teerpad by Nooitgedagt, dan die voetpad suidwes na die Witzenbergvallei-pad. Die presiese jeeppad en fietsrybruggie is nie op die kaarte nie, so volg die roetemerkers.","Sip Café is ’n koffiewinkel wat van skeepshouers gebou is. Dit is ’n welverdiende stop aan die einde van die dag."]},
  9:{t:"Slagboom → Tulbagh",terrain:"Teer, populierbos, bergpad oor die Witzenberg, ou wapad, boorde, grondpad",stay:"Tulbagh – vervoer terug na Citrusdal volgens reëling",
   steps:[
    "Dag 9 begin by <b>“Sip Café”</b>.",
