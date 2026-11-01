@@ -99,7 +99,7 @@ const META_AF = {
    "By die T-aansluiting draai julle <b>regs</b> op die grondpad.",
    "Volg hierdie grondpad vir <b>3 km</b>.",
    "Draai <b>regs</b> by die aanwysingsbord en volg die aanwysings na <b>Wadrift</b>."],
-  notes:["Dit is die moeilikste dag om te navigeer. Die boekie se Dag 6-teks loop van bladsy 21 tot bo-aan bladsy 22 (julle foto’s het bladsy 23 voor bladsy 22).","Plase: Tweefontein, Boplaas, Uitkyk, Bronaar, Wadrift.","Uitkyk, Bronaar, Straatdrif, Rotstuin, Welbedag en Wadrif word almal op die NGI 1:50k-kaart genoem. Die lyn volg die plaaspaaie wat daar gewys word."]},
+  notes:["Dit is die moeilikste dag om te navigeer. Die boekie se Dag 6-teks loop van bladsy 21 tot bo-aan bladsy 22 (julle foto’s het bladsy 23 voor bladsy 22).","Plase: Tweefontein, Boplaas, Uitkyk, Bronaar, Wadrift.","Uitkyk, Bronaar, Straatdrif, Rotstuin, Welbedag en Wadrif word almal op die NGI 1:50k-kaart genoem. Die lyn volg die plaaspaaie wat daar gewys word.","Die kraglyn na Tweefontein is op geen van die kaarte nie. Op satellietfoto’s is dit ’n reguit skoongemaakte strook van die hek by Menoegaa tot by die dam op die plaas Twee Fontein, en die kaart volg dit."]},
  7:{t:"Wadrift → Kaleo",terrain:"Grond- en teerpaaie, damwalle, dowwe tweespoor, bergfietspaaie",stay:"Kaleo-gasteplaas",
   steps:[
    "Stap terug na die groot grondpad waar julle gister na Wadrift ingedraai het. By die T-aansluiting draai julle <b>regs</b>. <b>Moenie</b> links draai terug na Bronaar nie.",
