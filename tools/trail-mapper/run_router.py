@@ -12,11 +12,11 @@ for f in json.load(open(EXPORT))["features"]:
 osm+= [[tuple(p) for p in l] for l in json.load(open("roads.json"))]
 osm+= [[tuple(p) for p in l] for l in json.load(open("greys.json"))]
 old=json.load(open("tracks_old.json"))
-def waypoints(segs):
-    w=[]
+def waypoints(segs, with_straight=False):
+    w=[]; straight=set()
     for k,pts in segs:
         if k=="g":
-            g=json.load(open("greys.json")); pts=[(-32.64797,18.94474),(-32.60619,18.98961)]
+            pts=[(-32.64797,18.94474),(-32.60619,18.98961)]
         pts=[tuple(p) for p in pts]
         if k in ("r","n","l"): sel=pts
         else:
@@ -25,9 +25,11 @@ def waypoints(segs):
                 acc+=hav(a,b)
                 if acc>=700: sel.append(b); acc=0
             sel.append(pts[-1])
-        for p in sel:
-            if not w or hav(w[-1],p)>40: w.append(p)
-    return w
+        for i,p in enumerate(sel):
+            if not w or hav(w[-1],p)>40:
+                w.append(p)
+                if k=="l" and i>0: straight.add(len(w)-2)
+    return (w,straight) if with_straight else w
 days=sys.argv[1:] or [str(d) for d in DAYS]
 res=json.load(open("tracks_new.json")) if len(sys.argv)>1 else {}
 for d in days:
@@ -37,7 +39,7 @@ for d in days:
         guide=waypoints(DAYS[int(d)]); G=Grid(guide,osm,buffer_m=900)
     else:
         guide=[tuple(p) for s in old[d] for p in s["c"]]; G=Grid(guide,osm)
-    pieces=route_day(G,waypoints(DAYS[int(d)]))
+    wps,st=waypoints(DAYS[int(d)],True); pieces=route_day(G,wps,st)
     res[d]=pieces
     L={k:0 for k in "onh"}
     for p in pieces: L[p["k"]]+=sum(hav(a,b) for a,b in zip(p["c"],p["c"][1:]))

@@ -174,10 +174,15 @@ def rdp(pts, eps):
     if d[i] > eps: return rdp(pts[:i + 1], eps)[:-1] + rdp(pts[i:], eps)
     return [pts[0], pts[-1]]
 
-def route_day(grid, waypoints):
+def route_day(grid, waypoints, straight=()):
     """returns list of {'k': 'o'|'n'|'h', 'c': [[lat,lon],...]} pieces (o=OSM, n=NGI only, h=open country)"""
     cells = []
-    for a, b in zip(waypoints, waypoints[1:]):
+    for li, (a, b) in enumerate(zip(waypoints, waypoints[1:])):
+        if li in straight:                   # booklet says go straight (e.g. along an unmapped power line)
+            ca, cb = grid.cell(*a), grid.cell(*b); n = max(abs(cb[0] - ca[0]), abs(cb[1] - ca[1]), 1)
+            p = [(round(ca[0] + (cb[0] - ca[0]) * i / n), round(ca[1] + (cb[1] - ca[1]) * i / n)) for i in range(n + 1)]
+            cells += p if not cells else p[1:]
+            continue
         p = grid.route(a, b)
         if p is None: raise RuntimeError(f"no route {a}->{b}")
         cells += p if not cells else p[1:]
