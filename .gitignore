@@ -1,0 +1,4 @@
+tools/trail-mapper/tile-cache/
+tools/trail-mapper/osm-export.geojson
+tools/trail-mapper/tracks*.json
+__pycache__/

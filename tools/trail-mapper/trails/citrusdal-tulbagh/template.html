@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="af">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Citrusdal–Tulbagh Trail</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/togeojson@0.16.0/togeojson.js"></script>
+<style>
+:root{--red:#d7262b;--ink:#1f2328;--muted:#5b636b;--bg:#fff;--panel:#f5f6f7;--line:#d9dde1;--warnbg:#fff4e5;--warnink:#6b4300;--warnline:#f0c27a;--okbg:#eaf6ec;--okink:#1d5a2a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#e6e8ea;--muted:#a3abb3;--bg:#15181b;--panel:#1f2327;--line:#353a40;--warnbg:#3a2c12;--warnink:#f5d9a6;--warnline:#7a5a20;--okbg:#17301d;--okink:#a8dcb4}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:18px 16px 8px;max-width:1200px;margin:0 auto}
+h1{font-size:1.6rem;margin:0}
+.sub{color:var(--muted);font-size:.92rem;margin:4px 0 0}
+main{max-width:1200px;margin:0 auto;padding:0 16px 60px}
+#map{height:62vh;min-height:380px;border:1px solid var(--line);border-radius:10px;margin-top:12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted);margin:8px 0}
+.legend i{display:inline-block;width:26px;height:0;border-top:4px solid #555;vertical-align:middle;margin-right:5px}
+.legend i.h{border-top-style:dashed}
+.legend b{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:5px;border:2px solid #fff;box-shadow:0 0 0 1px #888}
+.warn{background:var(--warnbg);color:var(--warnink);border:1px solid var(--warnline);border-radius:8px;padding:9px 12px;font-size:.87rem;line-height:1.45;margin:12px 0}
+.tools button,.tools label{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:6px 10px;cursor:pointer;display:inline-block;margin:4px 4px 0 0}
+h2{font-size:1.2rem;margin:30px 0 10px}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.8rem}
+td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.click{cursor:pointer} tr.click:hover{background:var(--panel)}
+.scroll{overflow-x:auto}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.day{border:1px solid var(--line);border-radius:10px;margin:16px 0;overflow:hidden}
+.day>header{all:unset;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:12px 14px;background:var(--panel);border-bottom:1px solid var(--line);width:100%;box-sizing:border-box}
+.day h3{margin:0;font-size:1.05rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.chip{font-size:.78rem;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.daybody{padding:10px 14px 14px}
+.profile{width:100%;height:150px;display:block;margin:4px 0 6px;cursor:crosshair}
+.profile text{font-size:10px;fill:var(--muted)}
+.cols{display:grid;grid-template-columns:3fr 2fr;gap:18px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+ol.steps{padding-left:22px;margin:6px 0}
+ol.steps li{margin:5px 0;line-height:1.45;font-size:.9rem}
+.side h4{margin:8px 0 6px;font-size:.88rem}
+.side ul{padding-left:18px;margin:4px 0}
+.side li{font-size:.86rem;line-height:1.4;margin:3px 0}
+.marks li{cursor:pointer}
+.marks li:hover{text-decoration:underline}
+.tag{font-size:.7rem;border-radius:4px;padding:0 5px;margin-left:4px;border:1px solid var(--line);color:var(--muted)}
+.tag.osm{background:var(--okbg);color:var(--okink);border-color:transparent}
+.alert{color:var(--red);font-weight:600}
+.btnrow button{font:inherit;font-size:.8rem;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:4px 9px;cursor:pointer;margin:6px 6px 0 0}
+.sign{display:flex;gap:12px;align-items:center}
+.sign svg{flex:none;background:#fff;border:1px solid var(--line);border-radius:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px}
+@media (max-width:820px){.grid2{grid-template-columns:1fr}}
+.grid2 li,.info li{font-size:.9rem;line-height:1.45;margin:4px 0}
+footer{color:var(--muted);font-size:.78rem;margin-top:30px}
+.leaflet-popup-content{font-size:.85rem}
+.lang{float:right;display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:4px}
+.lang button{font:inherit;font-size:.85rem;border:0;background:var(--bg);color:var(--ink);padding:6px 12px;cursor:pointer}
+.lang button.on{background:var(--ink);color:var(--bg);font-weight:600}
+.km-label{background:transparent;border:none;box-shadow:none;font-weight:700;color:#222;text-shadow:0 0 3px #fff,0 0 3px #fff}
+@media print{#map,.tools,.btnrow,.legend{display:none}.day{break-inside:avoid-page}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header>
+  <div class="lang" role="group" aria-label="Taal / Language"><button data-lang="af">Afrikaans</button><button data-lang="en">English</button></div>
+  <h1>Citrusdal → Tulbagh</h1>
+  <p class="sub" data-i18n="sub">9-day farm-to-farm hike through the Olifants River valley, over the Middelberg Pass and across the Koue Bokkeveld, ending at the NG Kerk in Tulbagh. Eight walking days and one rest day.</p>
+</header>
+<main>
+  <div class="warn" data-i18n="warn"><b>How accurate is this map?</b> It's a reconstruction from the route booklet, not a recorded GPS track. The farms and stops are placed from the <b>NGI 1:50 000 topographic maps</b> and OpenStreetMap. The line follows roads, tracks and paths on those maps; where it leaves the mapped network it is <b>dashed</b>. Landmarks are tagged <span class="tag osm">OSM</span>, <span class="tag osm">NGI 1:50k</span> or <span class="tag">estimated</span>. Distances and climbs are about ±10%. On the ground, always follow the <b>red lighthouse waymarks</b> and the booklet.</div>
+
+  <div class="tools">
+    <button id="fitAll" data-i18n="fitAll">Whole route</button>
+    <button id="dlAll" data-i18n="dlAll">Download GPX (all days)</button>
+    <label><span data-i18n="gpxLabel">Load your own GPX…</span> <input id="gpx" type="file" accept=".gpx,.kml" hidden></label>
+    <button onclick="window.print()" data-i18n="printBtn">Print directions</button>
+  </div>
+  <div id="map"></div>
+  <div class="legend" id="legend"></div>
+
+  <h2 data-i18n="hSummary">Route summary</h2>
+  <div class="scroll"><table id="summary">
+    <thead data-i18n="thead"><tr><th>Day</th><th>Stage</th><th class="n">Distance</th><th class="n">Climb</th><th class="n">Descent</th><th class="n">High point</th><th>Terrain</th><th>Overnight</th></tr></thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
+  </table></div>
+  <p class="sub" data-i18n="sumNote">Distances and climbs are measured along the reconstructed line using SRTM 30 m elevation data. Click a row to jump to that day.</p>
+
+  <h2 data-i18n="hDays">Day by day</h2>
+  <div id="days"></div>
+
+  <h2 data-i18n="hSigns">Waymarks</h2>
+  <div class="sign">
+    <svg width="96" height="66" viewBox="0 0 74 52" role="img" aria-label="Red lighthouse with arrow">
+      <g fill="#d7262b"><rect x="22" y="8" width="8" height="4"/><rect x="20" y="12" width="12" height="3"/><polygon points="21,15 31,15 33,38 19,38"/><rect x="10" y="36" width="32" height="10"/><rect x="10" y="33" width="4" height="4"/><rect x="38" y="33" width="4" height="4"/><polygon points="52,14 56,14 64,26 56,38 52,38 60,26"/></g>
+    </svg>
+    <p style="margin:0;line-height:1.45" data-i18n="signText">Follow white signs on poles, fences, gates and trees with a <b>red lighthouse</b> and a <b>red arrow</b>. On Day 7 there are also <b>red arrows painted on rocks</b>. The booklet mentions a sign at almost every turn. If you go more than a few hundred metres without seeing one, turn back to the last sign.</p>
+  </div>
+
+  <h2 data-i18n="hPlan">Planning &amp; safety</h2>
+  <div class="grid2">
+    <ul class="info" data-i18n="plan1">
+      <li><b>Private land:</b> nearly the whole route crosses working farms. Stay on the marked route, don't pick fruit or damage trees, <b>close every gate</b>, and don't disturb the people who live there.</li>
+      <li><b>Road walking:</b> about a third of the route is on tar, including 18 km on the Middelberg Pass (Day 2), which has heavy trucks. Walk on the shoulder or on the gravel beside the tar, in single file, and wear something bright. Avoid walking at dusk.</li>
+      <li><b>Bees:</b> there are hives in the orchards around Tweefontein (Day 6). If you're allergic, carry your medication.</li>
+      <li><b>Water:</b> there are no shops between Citrusdal and Op die Berg. Carry at least 2–3 litres a day, more in summer. Ask your hosts to refill you each morning.</li>
+      <li><b>Food along the way:</b> Citrusdal (Day 1), dried fruit at Kunje (Day 3, ask at the office), and Sip Café at Slagboom (end of Day 8). Plan everything else with your hosts.</li>
+    </ul>
+    <ul class="info" data-i18n="plan2">
+      <li><b>Weather:</b> the Koue Bokkeveld sits at 900–1,100 m and is one of the coldest places in the Western Cape, with frost and sometimes snow in winter (Jun–Aug). Summer days are hot (often 30 °C+) with little shade on the orchard roads. Spring (Sep–Oct) and autumn (Mar–May) are the most comfortable.</li>
+      <li><b>Cell signal:</b> patchy on the plateau and over the mountains. Download offline maps and the GPX before you go, and tell someone your daily plan.</li>
+      <li><b>Fitness:</b> 15–25 km a day for eight days, mostly on easy gradients. The big climbs are the Middelberg Pass (Day 2, about +750 m), the zig-zag cycle path (Day 6), and the long descent into Tulbagh (Day 9, about −900 m).</li>
+      <li><b>Getting home:</b> the organisers can arrange transport from Tulbagh back to Citrusdal. Book it in advance.</li>
+      <li><b>Contacts:</b> the hosts' and farm owners' phone numbers are in the printed booklet. They are left off this public page on purpose. Carry the booklet.</li>
+    </ul>
+  </div>
+
+  <h2 data-i18n="hSheets">NGI 1:50 000 map sheets</h2>
+  <p class="info" data-i18n="sheets" style="font-size:.9rem;line-height:1.5">The route crosses seven 1:50 000 topographic sheets from the Chief Directorate: National Geo-spatial Information (NGI): <b>3218DB</b> (Day 1), <b>3219CA</b> (Days 1–3), <b>3219CC</b> (Day 3), <b>3219CD</b> (Days 3–6), <b>3319AB</b> (Days 6–9), <b>3319AC</b> and <b>3319AD</b> (Day 9). Paper or digital copies are available from NGI in Mowbray, Cape Town. The map above uses scans of these sheets as its default layer, and they show the farm names along the route.</p>
+
+  <h2 data-i18n="hOffline">Using the map offline</h2>
+  <ul class="info" data-i18n="offline">
+    <li>Click <b>Download GPX</b> (whole route or one day) and import the file into an offline map app such as Gaia GPS, OsmAnd, Organic Maps or Garmin Explore.</li>
+    <li>Download that area's offline maps in the app while you still have Wi-Fi.</li>
+    <li>If you record your own track while walking, load it here with <b>Load your own GPX…</b> to compare it with this reconstruction.</li>
+  </ul>
+
+  <footer data-i18n="footer">NGI 1:50 000 topographic maps © State Copyright, Chief Directorate: National Geo-spatial Information. Map data © OpenStreetMap contributors (ODbL). Topographic tiles © OpenTopoMap (CC-BY-SA). Imagery © Esri. Elevation: SRTM 30 m via OpenTopoData. Directions are summarised and translated from the trail's route booklet.</footer>
+</main>
+
+<script>
+const DATA = __DATA__;
+__AF__
+let LANG="af";
+try{ const q=new URLSearchParams(location.search).get("lang"); LANG = q || localStorage.getItem("trailLang") || "af"; }catch(e){}
+if(LANG!=="en") LANG="af";
+document.documentElement.lang=LANG;
+const t=(en,af)=>LANG==="af"?af:en;
+const SRC={osm:['OpenStreetMap','OpenStreetMap','mapped'],ngi:['NGI 1:50k map','NGI 1:50k-kaart','NGI'],est:['estimated from the booklet','geskat uit die boekie','est'],web:['Menoegaa website / Google Maps','Menoegaa-webwerf / Google Maps','web'],sat:['satellite image (Esri)','satellietfoto (Esri)','sat']};
+const srcTag=k=>k.src==='est'?t('estimated','geskat'):(k.src==='ngi'?'NGI 1:50k':k.src==='web'?'Google Maps':k.src==='sat'?t('satellite','satelliet'):'OSM');
+const fmt=x=>LANG==="af"?String(x).replace('.',','):String(x);
+document.querySelectorAll(".lang button").forEach(b=>{ if(b.dataset.lang===LANG) b.classList.add("on"); b.onclick=()=>{ try{localStorage.setItem("trailLang",b.dataset.lang);}catch(e){} const u=new URL(location.href); u.searchParams.set("lang",b.dataset.lang); location.href=u.toString(); }; });
+if(LANG==="af"){ document.title="Citrusdal–Tulbagh Staproete"; document.querySelectorAll("[data-i18n]").forEach(el=>{ const v=AF_STATIC[el.dataset.i18n]; if(v!==undefined) el.innerHTML=v; }); DATA.marks.forEach(k=>{ if(k.na) k.n=k.na; }); }
+
+const META = {
+ 1:{t:"Piekenierskloof Pass → Allandale",c:"#e6194b",terrain:"Old gravel pass, town streets, tar road",stay:"Allandale – overnight huts",
+  steps:[
+   "Start at the top of the old Piekenierskloof Pass (Grey's Pass) and follow the old pass road down until it meets the tar road.",
+   "Turn <b>right</b> towards Citrusdal and walk over the bridge into town.",
+   "Go straight along the main road through town and over the <b>4-way crossing</b>.",
+   "Keep straight, past <b>Pomario Privaat Skool</b> on your right.",
+   "Keep straight, past <b>By die Dam Oord</b>.",
+   "Follow the road onto the <b>Middelberg Pass road (R303)</b>.",
+   "Turn <b>right</b> at the <b>Allandale</b> sign. The overnight huts are about <b>4 km</b> further on."],
+  notes:["Citrusdal is the last proper town until Op die Berg (Day 7), so stock up here.","The old pass is gravel and rocky in places, and it's downhill most of the way."]},
+ 2:{t:"Allandale → Ysterplaat",c:"#f58231",terrain:"Farm road, then 18 km of tar mountain pass",stay:"Ysterplaat – “Ouma se Huis”",
+  steps:[
+   "Walk back to the tar road (R303) and turn <b>right</b>.",
+   "Follow the <b>Middelberg Pass for 18 km</b>.",
+   "<span class='alert'>Watch out for heavy vehicles</span> using the pass. Walk on the shoulder in single file, and enjoy the view.",
+   "Turn <b>left</b> at the farm <b>Ysterplaat</b> to “Ouma se Huis”."],
+  notes:["This is the biggest climb of the trail. The pass tops out at about 1,060 m, roughly 14 km into the day.","There's no shade or water on the pass, so start early, especially in summer."]},
+ 3:{t:"Ysterplaat → Schoongezicht",c:"#e6b800",terrain:"Orchard roads, dam walls, field edges, 4.5 km tar",stay:"Schoongezicht / Skoongesig – campsite",
+  steps:[
+   "From “Ouma se Huis”, walk to the Ysterplaat entrance and turn <b>left</b>.",
+   "Walk about <b>2 km to Kunje</b> and turn <b>right</b> at the entrance. Dried fruit is for sale on Kunje; ask at the office.",
+   "Walk through the farmyard and past the packhouse into the orchards for about <b>4 km</b>. <b>Stay on the marked route</b>; don't damage trees or pick fruit.",
+   "The gravel road turns left out of the orchards to a <b>T-junction with the tar road</b>. Turn <b>right</b> and follow the tar for 2 km to <b>De Straadt</b>.",
+   "At De Straadt, turn <b>left</b>, and after <b>500 m</b> turn <b>right</b> again.",
+   "Walk along the orchard to a <b>low-water concrete bridge</b>. Cross it and turn <b>right</b> straight away.",
+   "Walk about <b>300 m</b> to the end of the orchard, then turn <b>left</b>.",
+   "Follow the path along the <b>boundary fence</b> to a gate.",
+   "Go through the gate (<b>close it</b>) and follow the footpath for about <b>300 m</b> to a ditch, then turn <b>right</b> on the other side of the ditch.",
+   "Follow the fence to the next sign. Here you <b>climb over the fence using a ladder</b> and turn <b>right</b>.",
+   "Walk about <b>200 m</b> to the corner of the orchard and turn <b>left</b>.",
+   "Walk along the top of the orchard to a gate. Go out <b>right</b> and walk to the dam wall. A sign at the start of the wall shows the way.",
+   "At the end of the dam wall, turn <b>left</b> when you reach the orchard.",
+   "Walk about <b>200 m</b> and turn <b>right</b>. After another <b>250 m</b>, turn <b>left</b> and keep straight on the clear gravel road.",
+   "Keep straight on this gravel road for about <b>3 km</b>.",
+   "Turn <b>right</b> at the sign, then <b>left</b> after about <b>350 m</b>. Cross the old dam wall and turn <b>left</b> at the sign. Follow the path to the orchard.",
+   "Keep straight past the orchard, with the tar road on your right, to the <b>Tandfontein entrance</b>.",
+   "Turn <b>left</b> onto the tar road and walk <b>4.5 km</b> to the <b>Schoongezicht turn-off</b>. Please walk on the gravel beside the tar."],
+  notes:["This day has the most turns on the trail, so take the booklet out often.","The booklet ends the day at the Schoongezicht turn-off on the R303. The campsite (Skoongesig) is about 4 km further west along the gravel road, and the map includes that walk. Day 4 walks back to the R303. Ask your host whether they collect you instead.","Farms passed: Kunje, De Straadt, Tandfontein."]},
+ 4:{t:"Schoongezicht → Menoegaa",c:"#2ca02c",terrain:"Dam walls, contour ditches, river bank, gravel roads",stay:"Menoegaa – campsite",
+  steps:[
+   "Day 4 starts at the <b>Bokfontein turn-off</b>. Turn <b>left</b> here and follow the gravel road downhill.",
+   "Turn <b>left</b> at the sign and walk to the dam wall on your left. Cross the wall that <b>separates the two dams</b> to the sign where you go <b>left</b> down off the wall.",
+   "Follow the signs down from the dam wall to the boundary fence and keep <b>right</b> to the farm gate. Go through it and turn <b>right</b> (<b>close the gate</b>).",
+   "Follow the signs for about <b>500 m</b> to a <b>contour ditch</b> running across the field. Walk on the <b>left side</b> of the ditch for about <b>600 m</b> and turn <b>right</b> at the sign.",
+   "Walk towards the orchards, again beside a contour ditch, to the boundary fence. Turn <b>left</b> to the farm gate, then go <b>right</b> through it towards the orchard (<b>close the gate</b>).",
+   "Follow the gravel road through the orchards and turn <b>left</b> at the signs. Follow the path <b>downstream for ±1.5 km</b>, on the <b>right bank</b> of the river.",
+   "The next sign is on an <b>oak tree</b>. Walk right around the tree to the farm gate.",
+   "Go through the gate and follow the signs for <b>2.6 km</b>, with the <b>Langrivier on your left</b>. Remember to close the gates.",
+   "Turn <b>left</b> at the T-junction onto a very clear gravel road over the Langrivier. After <b>±600 m</b>, turn <b>right</b> towards the <b>blue gum trees</b>.",
+   "Follow the gravel road from <b>Langrivier to Libertas</b> for about <b>4.5 km</b> and turn <b>right</b> at the sign.",
+   "There are <b>excavations</b> on your left. Follow the path over a <b>small bridge</b> and up the hill; it bends left by itself.",
+   "Turn <b>right</b> onto the main gravel road (sign on the pole) and follow it for about <b>1.8 km</b>.",
+   "<span class='alert'>Watch carefully for the left turn.</span> The sign is on a <b>gate on the left</b> of the road. Go left through the gate and follow the path along the fence towards the <b>pine plantation</b>.",
+   "Follow the path around the plantation, then along the next boundary fence to the gate, where you turn <b>right</b>. Close all gates.",
+   "Turn <b>left</b> at the next gate and walk to <b>Menoegaa campsite</b>."],
+  notes:["Farms: Bokfontein, Langrivier, Libertas, De Meul.","Menoegaa campsite is on the farm <b>Kalifornië</b>, about 10 km from Op die Berg. Its position comes from Menoegaa’s own website and Google Maps.","Day 5 is a rest day here, so if you're tired the next day is yours."]},
+ 5:{t:"Menoegaa – rest day",c:"#9aa0a6",terrain:"–",stay:"Menoegaa",steps:["Rest day at Menoegaa."],notes:[]},
+ 6:{t:"Menoegaa → Wadrift",c:"#17becf",terrain:"Power-line track, orchards, cycle path with a steep climb, tar road",stay:"Wadrift – guesthouse",
+  steps:[
+   "Walk back along the path you arrived on (Day 4). <b>Don't</b> turn left at the gate; keep straight and follow the <b>power lines</b> to the farm <b>Tweefontein</b> (about 2 km).",
+   "Turn <b>right</b> at the sign and follow the signs along the path. There's a small detour to the dam, and a farm gate that may be open or closed. Follow the path to the dam wall.",
+   "Cross the dam wall towards the orchards to a gate. Go through and turn <b>right</b> straight away. Follow the signs through the orchards for about <b>800 m</b>, then turn <b>left</b>. <span class='alert'>Watch out for bees!</span>",
+   "Before the <b>solar panels</b> there's a dam wall on your right.",
+   "Turn <b>right</b> at the solar panels and follow the gravel road for <b>1.2 km</b>.",
+   "<span class='alert'>Very important:</span> turn <b>right</b> at the <b>old empty earth dam</b>, walk through the dam, and find the <b>cycle path</b> at the front right-hand side of the dam.",
+   "Follow the cycle path for <b>5 km</b>. You'll pass another dam, and the path <b>zig-zags up a steep hill</b>.",
+   "At the top, keep straight on the cycle path.",
+   "The last few hundred metres run alongside <b>pine trees</b>.",
+   "At the end of the cycle path, turn <b>right</b> along the boundary fence and follow the gravel road downhill, with an orchard on your right and the tar road on your left.",
+   "Turn <b>left</b> at the corner of the orchard and then straight away <b>right</b> onto the tar road.",
+   "Walk on the shoulder, or on a gravel track beside the tar where you can. <b>Boplaas</b> will be on your right, a very historic farm where the poet <b>Boerneef</b> lived (the farmyard is a national monument).",
+   "Follow the tar road for about <b>2.5 km</b> to <b>Uitkyk</b>. Turn <b>left</b> in and straight away <b>right</b> again.",
+   "Follow this gravel road with the orchard on your left and the tar road on your right.",
+   "The road becomes a farm tar road. Walk past the dam on your right to the <b>Bronaar</b> offices.",
+   "Follow the farm tar road past the <b>nursery school</b>, turn <b>right</b>, and take the first left turn to <b>Bronaar's packhouse</b>.",
+   "Follow the tar road; the big packhouse is on your right. If you're unsure of the way, phone the farm manager (number in the booklet).",
+   "Follow this tar road for <b>3 km</b>. It has an avenue of trees on the left shoulder, and you cross the <b>Hou-den-Bek river</b>.",
+   "At the T-junction, turn <b>right</b> onto the gravel road.",
+   "Follow this gravel road for <b>3 km</b>.",
+   "Turn <b>right</b> at the sign and follow the signs to <b>Wadrift</b>."],
+  notes:["This is the most complicated day to navigate. The booklet's Day 6 text runs from page 21 to the top of page 22 (your photos have page 23 before page 22).","Farms: Tweefontein, Boplaas, Uitkyk, Bronaar, Wadrift.","Uitkyk, Bronaar, Straatdrif, Rotstuin, Welbedag and Wadrif are all named on the NGI 1:50k map. The line follows the farm roads shown there."]},
+ 7:{t:"Wadrift → Kaleo",c:"#4363d8",terrain:"Gravel and tar roads, dam walls, faint two-track, mountain-bike tracks",stay:"Kaleo guest farm",
+  steps:[
+   "Walk back to the big gravel road where you turned in to Wadrift yesterday. At the T-junction turn <b>right</b>. <b>Don't</b> turn left back to Bronaar.",
+   "Follow the gravel road for about <b>2.5 km</b> until it gradually joins the tar road.",
+   "Keep straight on the tar road. <span class='alert'>Don't turn right to Op die Berg.</span>",
+   "Follow the tar road for about <b>2 km</b> to the farm <b>De Hoek</b> on your left.",
+   "Turn <b>left</b> here and walk to the main gate. Use the <b>pedestrian opening on the left of the gate</b> and keep straight to the sign where you turn <b>right</b>.",
+   "Walk to the dam in front of you and keep to the <b>right-hand dam wall</b>.",
+   "Turn <b>left</b> on the next dam wall and then <b>right</b> again at the sign. Follow the <b>red arrows on the rocks</b>. The dam is now on your right.",
+   "Follow the faint two-track for <b>±1.1 km</b> across the old field, with a big dam on your right and the mountain on your left.",
+   "Near the end of the old field, the signs show you to keep <b>left</b>, then turn <b>right</b> after about <b>700 m</b> towards a dam wall.",
+   "Cross the dam wall and follow the signs to a farm gate. Climb over or go through it (<b>close the gate!</b>).",
+   "Go straight across the gravel road and follow the gravel road uphill for about <b>1.1 km</b>.",
+   "Turn <b>left</b> at the sign. Please <b>don't</b> carry straight on.",
+   "You're now on a <b>two-track mountain-bike path</b>.",
+   "Follow the signs and always take the <b>right</b> turn-off until you reach a gravel road. The next points take you, in order, to Kaleo:",
+   "Cross the gravel road and follow the same cycle path. The cycle path makes a T-junction with a gravel road; turn <b>left</b> here.",
+   "The road takes you to <b>Kaleo guest farm</b>."],
+  notes:["Farms: De Hoek, Kaleo.","Op die Berg village is just off the route, with a shop, fuel and a school. It's worth a detour if you need supplies (check with your group first)."]},
+ 8:{t:"Kaleo → Slagboom",c:"#911eb4",terrain:"Mountain path, fire break, tar, orchards, dam walls, jeep track, gravel",stay:"Slagboom (Sip Café)",
+  steps:[
+   "Day 8 starts <b>behind the tractor shed</b> at Kaleo, where you finished yesterday.",
+   "Walk up the mountain path behind the shed and keep straight to the dam.",
+   "Cross the dam wall. At the end of the wall, turn <b>right</b> over the <b>wooden bridge</b> and follow the cycle path and signs.",
+   "Turn <b>left</b> at the T-junction.",
+   "Turn <b>right</b> onto a wide <b>fire break</b>.",
+   "Follow the fire break for about <b>900 m</b> to where it joins another road, and turn <b>left</b> here.",
+   "Keep straight on this road for <b>±1.5 km</b>. Don't turn off left or right.",
+   "Turn <b>right</b> at the tar road and follow it to the T-junction.",
+   "At the T-junction, go straight across the tar and turn <b>left</b> to the corner of the orchard. Here you <b>climb through the fence</b>. You're now on <b>Bokveldskloof</b>.",
+   "Follow the signs straight on, with the dam on your right and the orchard on your left.",
+   "After about <b>1 km</b>, turn <b>left</b> at the end of the orchard and then <b>right</b> up onto the dam wall.",
+   "Follow the dam wall to a footpath.",
+   "Follow the footpath to an orchard. Turn <b>right</b> and take the <b>middle path</b> that leads to the dam (watch for the signs). You're now walking on <b>Nooitgedacht</b>.",
+   "Turn <b>left</b> towards the dam and then <b>right</b> below the dam wall.",
+   "Walk past below the dam wall and keep <b>left</b> towards the <b>pine plantation</b>.",
+   "Follow the gravel road with the plantation on your left and the mountain on your right for about <b>1 km</b>, then turn <b>right</b> at the sign onto a <b>jeep track</b>.",
+   "The track is badly <b>washed away for about 100 m</b>; walk on the left side of the washout. A footpath turns <b>left</b> at the sign. Follow it over a <b>cycle bridge</b> to the tar road (about <b>3.5 km</b>).",
+   "Turn <b>right</b> at the tar road and look straight away for a footpath on the <b>left</b> side of the road, where you turn left.",
+   "<span class='alert'>Very important: don't take the footpath that goes around the power station.</span>",
+   "Carry on along the footpath.",
+   "When you can see or hear the tar road, a footpath turns off to the left. <span class='alert'>DON'T TAKE IT!</span> Walk straight on to the tar road.",
+   "Turn <b>left</b> on the tar road and walk about <b>150 m</b>. Look for a gravel road on the <b>right</b> side of the road; there's a sign as well.",
+   "Follow the gravel road past a dam, with the tar road on your left.",
+   "Follow the gravel road for about <b>3 km</b> to the end of the <b>Witzenberg Pass</b>. Don't turn off left or right on this road.",
+   "Walk to <b>Slagboom (Sip Café)</b>."],
+  notes:["Farms: Bokveldskloof, Nooitgedacht, Slagboom.","Between Bokveldskloof and the Witzenberg substation the line follows the nearest mapped roads. The booklet’s dam walls, pine plantation and jeep track on Nooitgedacht can’t be pinned down on the maps, so follow the waymarks there.","Sip Café is a coffee shop built from shipping containers. It's a well-earned stop at the end of the day."]},
+ 9:{t:"Slagboom → Tulbagh",c:"#e377c2",terrain:"Tar, poplar woods, mountain path over the Witzenberg, old wagon road, orchards, gravel",stay:"Tulbagh – transport back to Citrusdal by arrangement",
+  steps:[
+   "Day 9 starts at <b>Sip Café</b>.",
+   "Walk straight along the tar road towards the Witzenberg to <b>Ouplaas</b>, about <b>5 km</b>.",
+   "Turn <b>left</b> at the Ouplaas entrance gate, then <b>right</b> at the gate at the end of the <b>horse camp</b>.",
+   "Follow the path through the <b>poplar wood</b> to the big dam at the foot of the mountain.",
+   "Follow the path that runs past the right of the dam <b>up the mountain</b>.",
+   "Where the mountain path splits, turn <b>right</b>.",
+   "On top of the ridge the path splits again. Keep <b>left</b> here and go downhill.",
+   "Follow the <b>old wagon road</b> down the mountain. You should now see <b>Tulbagh</b> in front of you.",
+   "Keep <b>right</b> when you reach the bottom of the pass and walk past the house on your left. <b>Please don't disturb the people who live there.</b>",
+   "Turn <b>left</b> at the signs, and after about <b>200 m</b> turn <b>right</b> over the <b>wooden cycle bridge</b> on your right.",
+   "Walk through the orchards following the signs. Keep <b>left</b> towards the dam, about <b>1.1 km</b> further.",
+   "Walk past the top side of the dam. The path now goes over a hill, with a bigger dam on your left and a smaller dam on your right.",
+   "Follow the path to the farm buildings and house in front of you, where you'll find a gravel road. Turn <b>left</b> here.",
+   "Follow the gravel road for <b>±2.3 km</b> to a T-junction with the tar road. On the way you pass the old <b>Kruisvallei cemetery</b> and <b>Obiqua prison</b>.",
+   "Turn <b>left</b> at the T-junction and follow the tar road to the <b>4-way stop</b>.",
+   "<b>NG Kerk Tulbagh</b> is on your left. <b>The End!</b>"],
+  notes:["Farms: Ouplaas, Witzenberg, Kruisvallei.","<b>The crossing over the Witzenberg isn't on OpenStreetMap,</b> but the NGI 1:50k map shows the old Witsenbergpas track from the dam at Hartbeesvlei over the ridge (about 1,030 m) down to the farm Witzenberg. The line is traced from that map. Still follow the waymarks.","It's a long descent of about 900 m from the Witzenberg valley to Tulbagh, which is hard on the knees. Walking poles help."]}
+};
+
+const M=d=>LANG==="af"?Object.assign({},META[d],META_AF[d]):META[d];
+// --- map
+const Topo=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'&copy; OpenStreetMap, SRTM | OpenTopoMap (CC-BY-SA)'});
+const OSM=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'});
+const Sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Imagery &copy; Esri'});
+const NGI50=L.tileLayer('https://htonl.dev.openstreetmap.org/ngi-tiles/tiles/50k/{z}/{x}/{-y}.png',{minZoom:4,maxZoom:18,maxNativeZoom:15,attribution:'State Copyright &copy; <a href="https://www.ngi.gov.za/">Chief Directorate: National Geo-spatial Information</a>'});
+const map=L.map('map',{layers:[NGI50]});
+L.control.scale({imperial:false}).addTo(map);
+const all=L.featureGroup().addTo(map), dayLayers={}, overlays={};
+const cursor=L.circleMarker([0,0],{radius:7,color:'#000',weight:2,fillColor:'#fff',fillOpacity:1});
+
+Object.entries(DATA.days).forEach(([d,day])=>{
+  const m=M(d), g=L.featureGroup();
+  day.segs.forEach(s=>{
+    L.polyline(s.c,{color:'#fff',weight:8,opacity:.75}).addTo(g);
+    L.polyline(s.c,{color:m.c,weight:4.5,dashArray:s.k==='h'?'7 7':null})
+      .bindTooltip(`${t('Day','Dag')} ${d}: ${m.t}${s.k==='h'?'<br><i>'+t('hand-drawn – no mapped path','met die hand geteken – geen gekarteerde pad')+'</i>':s.k==='n'?'<br><i>'+t('track from the NGI 1:50k map','spoor van die NGI 1:50k-kaart')+'</i>':s.k==='o'?'<br><i>'+t('track/road on OpenStreetMap','spoor/pad op OpenStreetMap')+'</i>':''}`,{sticky:true}).addTo(g);
+  });
+  const first=day.segs[0].c[0], lastSeg=day.segs[day.segs.length-1].c, last=lastSeg[lastSeg.length-1];
+  L.marker(last,{icon:L.divIcon({className:'',html:`<div style="background:${m.c};color:#fff;border:2px solid #fff;border-radius:50%;width:24px;height:24px;line-height:20px;text-align:center;font:700 12px system-ui;box-shadow:0 1px 3px rgba(0,0,0,.4)">${d}</div>`,iconSize:[24,24],iconAnchor:[12,12]})})
+    .bindPopup(`<b>${t('End of Day','Einde van Dag')} ${d}</b><br>${m.stay}<br><small>${fmt(day.km)} km · +${day.up} m / −${day.down} m</small>`).addTo(g);
+  g.addTo(all); dayLayers[d]=g;
+  overlays[`<span style="color:${m.c}">■</span> ${t('Day','Dag')} ${d}`]=g;
+});
+const markLayer=L.featureGroup().addTo(map);
+DATA.marks.forEach((k,i)=>{
+  k.marker=L.circleMarker(k.ll,{radius:5,color:'#fff',weight:2,fillColor:k.src==='est'?'#888':'#222',fillOpacity:1})
+   .bindPopup(`<b>${k.n}</b><br>${t('Day','Dag')} ${k.d}, ${t('about km','ongeveer km')} ${fmt(k.km)}<br><small>${t('Position','Posisie')}: ${t(SRC[k.src][0],SRC[k.src][1])}</small>`).addTo(markLayer);
+});
+overlays[t('Landmarks','Landmerke')]=markLayer;
+L.control.layers({[t('NGI 1:50k topo map','NGI 1:50k topografiese kaart')]:NGI50,[t('Topographic (OpenTopoMap)','Topografies (OpenTopoMap)')]:Topo,'OpenStreetMap':OSM,[t('Satellite','Satelliet')]:Sat},overlays).addTo(map);
+const fitAll=()=>map.fitBounds(all.getBounds(),{padding:[20,20]});
+fitAll(); document.getElementById('fitAll').onclick=fitAll;
+
+document.getElementById('legend').innerHTML =
+  Object.keys(DATA.days).map(d=>`<span><span class="dot" style="background:${META[d].c}"></span>${t('Day','Dag')} ${d}</span>`).join('') +
+  `<span><i></i>${t('follows road/track on OpenStreetMap or the NGI 1:50k map','volg pad/spoor op OpenStreetMap of die NGI 1:50k-kaart')}</span><span><i class="h"></i>${t('hand-drawn (no mapped path)','met die hand geteken (geen gekarteerde pad)')}</span><span><b style="background:#222"></b>${t('landmark (OSM / NGI map)','landmerk (OSM / NGI-kaart)')}</span><span><b style="background:#888"></b>${t('landmark (estimated)','landmerk (geskat)')}</span>`;
+
+// --- summary table
+const tb=document.querySelector('#summary tbody'); let T={km:0,up:0,down:0};
+for(let d=1; d<=9; d++){
+  const m=M(d), day=DATA.days[d];
+  const tr=document.createElement('tr'); tr.className='click';
+  tr.innerHTML = day
+    ? `<td><span class="dot" style="background:${m.c}"></span>${d}</td><td>${m.t}</td><td class="n">${fmt(day.km)} km</td><td class="n">+${day.up} m</td><td class="n">−${day.down} m</td><td class="n">${day.max} m</td><td>${m.terrain}</td><td>${m.stay}</td>`
+    : `<td><span class="dot" style="background:${m.c}"></span>${d}</td><td>${m.t}</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td class="n">–</td><td>${t('Rest','Rus')}</td><td>${m.stay}</td>`;
+  tr.onclick=()=>document.getElementById('day'+d).scrollIntoView({behavior:'smooth'});
+  tb.appendChild(tr);
+  if(day){T.km+=day.km;T.up+=day.up;T.down+=day.down;}
+}
+document.querySelector('#summary tfoot').innerHTML=`<tr><th></th><th>${t('Total','Totaal')}</th><th class="n">≈${Math.round(T.km)} km</th><th class="n">+${T.up} m</th><th class="n">−${T.down} m</th><th colspan="3"></th></tr>`;
+
+// --- elevation profile (SVG)
+function profileSVG(d){
+  const p=DATA.days[d].prof, W=800,H=150,pl=34,pr=8,pt=10,pb=20;
+  const maxK=p[p.length-1][0], es=p.map(x=>x[1]);
+  let lo=Math.floor((Math.min(...es)-30)/100)*100, hi=Math.ceil((Math.max(...es)+30)/100)*100;
+  const X=k=>pl+(W-pl-pr)*k/maxK, Y=e=>pt+(H-pt-pb)*(1-(e-lo)/(hi-lo));
+  const line=p.map((q,i)=>(i?'L':'M')+X(q[0]).toFixed(1)+','+Y(q[1]).toFixed(1)).join('');
+  let grid='', step=(hi-lo)>600?200:100;
+  for(let e=lo;e<=hi;e+=step) grid+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(e)}" y2="${Y(e)}" stroke="currentColor" stroke-opacity=".12"/><text x="${pl-4}" y="${Y(e)+3}" text-anchor="end">${e}</text>`;
+  for(let k=0;k<=maxK;k+=(maxK>18?5:2)) grid+=`<text x="${X(k)}" y="${H-5}" text-anchor="middle">${k} km</text>`;
+  const marks=DATA.marks.filter(k=>k.d==d).map(k=>`<line x1="${X(k.km)}" x2="${X(k.km)}" y1="${pt}" y2="${H-pb}" stroke="${META[d].c}" stroke-opacity=".35" stroke-dasharray="2 3"/>`).join('');
+  return `<svg class="profile" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" data-day="${d}">
+    ${grid}${marks}<path d="${line}L${X(maxK)},${H-pb}L${pl},${H-pb}Z" fill="${META[d].c}" fill-opacity=".18"/>
+    <path d="${line}" fill="none" stroke="${META[d].c}" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    <line class="hair" x1="0" x2="0" y1="${pt}" y2="${H-pb}" stroke="currentColor" stroke-opacity="0"/>
+    <text class="hlab" x="0" y="${pt+8}" style="fill:currentColor;font-weight:700"></text></svg>`;
+}
+function trackPoints(d){ return DATA.days[d].segs.flatMap(s=>s.c); }
+function pointAtKm(d,km){
+  const pts=trackPoints(d); let cum=0;
+  for(let i=1;i<pts.length;i++){ const a=L.latLng(pts[i-1]), b=L.latLng(pts[i]), s=a.distanceTo(b)/1000;
+    if(cum+s>=km){ const f=s?(km-cum)/s:0; return [a.lat+(b.lat-a.lat)*f, a.lng+(b.lng-a.lng)*f]; } cum+=s; }
+  return pts[pts.length-1];
+}
+
+// --- day sections
+const box=document.getElementById('days');
+for(let d=1; d<=9; d++){
+  const m=M(d), day=DATA.days[d];
+  const sec=document.createElement('section'); sec.className='day'; sec.id='day'+d;
+  const marks=DATA.marks.filter(k=>k.d==d).sort((a,b)=>a.km-b.km);
+  sec.innerHTML=`<header><h3><span class="dot" style="background:${m.c}"></span>${t('Day','Dag')} ${d}: ${m.t}</h3>
+    <div class="chips">${day?`<span class="chip">${fmt(day.km)} km</span><span class="chip">↑ ${day.up} m</span><span class="chip">↓ ${day.down} m</span><span class="chip">${day.min}–${day.max} m</span><span class="chip">≈ ${Math.round((day.km/4+day.up/600)*2)/2} ${t('h walking','h stap')}</span>`:`<span class="chip">${t('rest','rus')}</span>`}</div></header>
+    <div class="daybody">
+      ${day?profileSVG(d):''}
+      <div class="cols">
+        <div><h4 style="margin:6px 0 4px;font-size:.9rem">${t('Directions','Aanwysings')}</h4><ol class="steps">${m.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>
+        <div class="side">
+          ${marks.length?`<h4>${t('Landmarks (click to show on map)','Landmerke (klik om op die kaart te wys)')}</h4><ul class="marks">${marks.map(k=>`<li data-i="${DATA.marks.indexOf(k)}">km ${fmt(k.km)} – ${k.n}<span class="tag ${k.src==='est'?'':'osm'}">${srcTag(k)}</span></li>`).join('')}</ul>`:''}
+          ${m.notes.length?`<h4>${t('Notes','Notas')}</h4><ul>${m.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`:''}
+          <h4>${t('Overnight','Oornag')}</h4><ul><li>${m.stay}</li></ul>
+          ${day?`<div class="btnrow"><button data-act="show">${t('Show on map','Wys op kaart')}</button><button data-act="gpx">${t('Download GPX','Laai GPX af')}</button></div>`:''}
+        </div>
+      </div>
+    </div>`;
+  box.appendChild(sec);
+  if(!day) continue;
+  sec.querySelector('[data-act=show]').onclick=()=>{ document.getElementById('map').scrollIntoView({behavior:'smooth'}); map.fitBounds(dayLayers[d].getBounds(),{padding:[30,30]}); };
+  sec.querySelector('[data-act=gpx]').onclick=()=>download(gpx([d]),`citrusdal-tulbagh-${t('day','dag')}${d}.gpx`);
+  sec.querySelectorAll('.marks li').forEach(li=>li.onclick=()=>{ const k=DATA.marks[li.dataset.i]; document.getElementById('map').scrollIntoView({behavior:'smooth'}); map.setView(k.ll,14); k.marker.openPopup(); });
+  // hover on profile -> marker on map
+  const svg=sec.querySelector('svg.profile'), hair=svg.querySelector('.hair'), lab=svg.querySelector('.hlab');
+  const prof=day.prof, maxK=prof[prof.length-1][0];
+  svg.addEventListener('mousemove',ev=>{
+    const r=svg.getBoundingClientRect(), x=(ev.clientX-r.left)/r.width*800;
+    const km=Math.max(0,Math.min(maxK,(x-34)/(800-42)*maxK));
+    const q=prof.reduce((a,b)=>Math.abs(b[0]-km)<Math.abs(a[0]-km)?b:a);
+    hair.setAttribute('x1',x);hair.setAttribute('x2',x);hair.setAttribute('stroke-opacity','.6');
+    lab.setAttribute('x',Math.min(x+4,700)); lab.textContent=`${(LANG==='af'?km.toFixed(1).replace('.',','):km.toFixed(1))} km · ${q[1]} m`;
+    cursor.setLatLng(pointAtKm(d,km)).addTo(map);
+  });
+  svg.addEventListener('mouseleave',()=>{hair.setAttribute('stroke-opacity','0');lab.textContent='';cursor.remove();});
+}
+
+// --- GPX
+function esc(s){return s.replace(/<[^>]+>/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function gpx(days){
+  let s=`<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="akkedis.github.io" xmlns="http://www.topografix.com/GPX/1/1">\n<metadata><name>${t('Citrusdal-Tulbagh trail (reconstructed, approximate)','Citrusdal-Tulbagh staproete (gerekonstrueer, benaderd)')}</name></metadata>\n`;
+  DATA.marks.filter(k=>days.includes(String(k.d))||days.includes(k.d)).forEach(k=>{s+=`<wpt lat="${k.ll[0]}" lon="${k.ll[1]}"><name>D${k.d} ${esc(k.n)}</name><desc>${srcTag(k)}</desc></wpt>\n`;});
+  days.forEach(d=>{ const day=DATA.days[d]; if(!day) return;
+    s+=`<trk><name>${t('Day','Dag')} ${d}: ${esc(M(d).t)}</name><desc>${fmt(day.km)} km, +${day.up}/-${day.down} m (${t('approximate','benaderd')})</desc>`;
+    day.segs.forEach(g=>{ s+='<trkseg>'+g.c.map(p=>`<trkpt lat="${p[0]}" lon="${p[1]}"/>`).join('')+'</trkseg>'; });
+    s+='</trk>\n'; });
+  return s+'</gpx>';
+}
+function download(text,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/gpx+xml'})); a.download=name; a.click(); }
+document.getElementById('dlAll').onclick=()=>download(gpx(Object.keys(DATA.days)),'citrusdal-tulbagh-all.gpx');
+
+// --- load own GPX
+document.getElementById('gpx').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return;
+  f.text().then(t=>{ const x=new DOMParser().parseFromString(t,'text/xml');
+    const gj=f.name.toLowerCase().endsWith('.kml')?toGeoJSON.kml(x):toGeoJSON.gpx(x);
+    const l=L.geoJSON(gj,{style:{color:'#000',weight:3}}).addTo(map); map.fitBounds(l.getBounds()); });
+});
+</script>
+</body>
+</html>
